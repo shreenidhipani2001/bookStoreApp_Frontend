@@ -1,13 +1,34 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useForm } from "react-hook-form";
-
+import axios from 'axios'
 function Login() {
     const { register, handleSubmit, formState: { errors } } = useForm();
 
     // Define the missing onSubmit function
-    const onSubmit = (data) => {
-        console.log(data); // Log form data to the console (can be replaced with desired action)
+    const onSubmit =async (data) => {
+        // Log form data to the console (can be replaced with desired action)
+        
+         // collect data from api call
+         const userInfo=   {
+            
+            email:data.email,
+            password:data.password
+         }
+        await axios.post("http://localhost:4001/user/login",userInfo).then((res)=>{
+            console.log(res.data);
+            if(res.data){
+                alert("Login successfull!!")
+
+            }
+            localStorage.setItem("Users",JSON.stringify(res.data.user))
+         }).catch((err)=>{
+            if(err.response){
+                console.log(err)
+            alert("Error"+err.response.data.message)
+            }
+         });
+
     };
 
     return (
